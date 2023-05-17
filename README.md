@@ -8,17 +8,18 @@ In order to use this endpoint user needs to specify 2 query parameters (both par
 1.	Installation process
     >> Install visual studio
 2.	Software dependencies
-    <PackageReference Include="FluentAssertions" Version="6.11.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
-    <PackageReference Include="NUnit" Version="3.13.3" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.4.2" />
-    <PackageReference Include="NUnit.Analyzers" Version="3.6.1">
-    <PackageReference Include="coverlet.collector" Version="3.2.0">
-    <PackageReference Include="RestSharp" Version="110.2.0" />
+    PackageReference Include="FluentAssertions" Version="6.11.0"
+    PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0"
+    PackageReference Include="NUnit" Version="3.13.3"
+    PackageReference Include="NUnit3TestAdapter" Version="4.4.2"
+    PackageReference Include="NUnit.Analyzers" Version="3.6.1"
+    PackageReference Include="coverlet.collector" Version="3.2.0"
+    PackageReference Include="RestSharp" Version="110.2.0"
+    
+3. Clone the project repository in visual studio 
+      HTTPS - https://github.com/ravisalunkhe/TestProject.git
     
 # Build and Test
-1. Clone the project repository in visual studio 
-      HTTPS - https://github.com/ravisalunkhe/TestProject.git
-2. Build the project 
-3. Open the Test Explorer 
-4. Run the tests
+1. Build the project 
+2. Open the Test Explorer 
+3. Run the tests
