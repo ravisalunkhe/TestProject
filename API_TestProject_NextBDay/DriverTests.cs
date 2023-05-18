@@ -1,22 +1,26 @@
 using Newtonsoft.Json.Linq;
 using RestSharp;
-
+using System.Globalization;
 
 namespace API_TestProject_NextBDay
 {
     public class DriverTests
     {
+        private RestClient restClient;
+
         [SetUp]
         public void Setup()
         {
+            // Create the REST client instance
+            restClient = new RestClient("https://lx8ssktxx9.execute-api.eu-west-1.amazonaws.com/");
         }
 
         [Test]
         [Category("APISuite")]
-        [TestCase("1990-10-30", "hour")]
-        [TestCase("1990-10-30", "day")]
+        [TestCase("1990-05-17", "hour")]
+        [TestCase("1990-05-17", "day")]
         [TestCase("1990-10-30", "week")]
-        [TestCase("1990-10-30", "month")]        
+        [TestCase("1990-10-30", "month")]
 
         public async Task ValidateTimeLeftForNextBirthDate(String dateOfBirth, String unit)
         {
@@ -24,31 +28,31 @@ namespace API_TestProject_NextBDay
             //string dateOfBirth = "1990-10-30";
             //string Unit = "day";
 
-            // Get the current local date and time
-            DateTime currentDate = DateTime.UtcNow.ToLocalTime();
+            // Parse the birthdate string into a DateTime object            
+            DateTime birthdateValue = DateTime.ParseExact(dateOfBirth, "yyyy-MM-dd", CultureInfo.InvariantCulture);
 
-            // Parse the provided date of birth string
-            DateTime birthDate = DateTime.Parse(dateOfBirth).Date;
+            // Get the current date and time
+            DateTime currentDate = DateTime.Now.Date;
 
-            // Calculate the next upcoming birth date in the current year
-            DateTime upcomingBirthDate = new DateTime(currentDate.Year, birthDate.Month, birthDate.Day);
+            // Calculate the upcoming birthdate for the current year            
+            DateTime upcomingBirthdate = new DateTime(currentDate.Year, birthdateValue.Month, birthdateValue.Day, 0, 0, 0);
 
-            // If the upcoming birth date has already passed, add one year to get the next year's birth date
-            if (currentDate > upcomingBirthDate)
+            // If the upcoming birthdate has already passed for the current year, add one year to it
+            if (upcomingBirthdate < currentDate)
             {
-                upcomingBirthDate = upcomingBirthDate.AddYears(1);
+                upcomingBirthdate = upcomingBirthdate.AddYears(1);
             }
 
-            // Calculate the remaining time until the upcoming birth date
-            TimeSpan remainingTime = upcomingBirthDate - currentDate;
+            // Calculate the remaining time until the upcoming birthdate
+            TimeSpan remainingTime = upcomingBirthdate - currentDate;
 
-            // Calculate the remaining days and hours
+            // Calculate the remaining Days and hours
             int remainingDays = remainingTime.Days;
             int remainingHours = remainingDays * 24 + remainingTime.Hours;
 
             // Calculate the remaining weeks and months
             int remainingWeeks = remainingDays / 7;
-            int remainingMonths = (upcomingBirthDate.Year - currentDate.Year) * 12 + upcomingBirthDate.Month - currentDate.Month;
+            int remainingMonths = (upcomingBirthdate.Year - currentDate.Year) * 12 + upcomingBirthdate.Month - currentDate.Month;
 
             // Determine the expected message based on the specified unit
             string expectedMessage = "";
@@ -69,12 +73,12 @@ namespace API_TestProject_NextBDay
             }
 
             // Create a REST client and request to get the response from the API
-            var restClient = new RestClient(baseUrl: "https://lx8ssktxx9.execute-api.eu-west-1.amazonaws.com/");
+            //var restClient = new RestClient(baseUrl: "https://lx8ssktxx9.execute-api.eu-west-1.amazonaws.com/");
             var request = new RestRequest(resource: "Prod/next-birthday");
             request.AddParameter("dateofbirth", dateOfBirth);
             request.AddParameter("unit", unit);
 
-            //
+            //Respense
             var response = await restClient.GetAsync(request);
 
             // Parse the JSON response
@@ -99,7 +103,7 @@ namespace API_TestProject_NextBDay
             //var responseStatusCode = response.StatusCode.ToString();
             //var responseStatusDescription = response.StatusDescription.ToString();
             //var IsSuccessStatusCode = response.IsSuccessStatusCode.ToString();            
-            
+
         }
     }
 }
